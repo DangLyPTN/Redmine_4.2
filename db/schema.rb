@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_26_153402) do
+ActiveRecord::Schema.define(version: 2021_11_26_024306) do
 
   create_table "agile_colors", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "container_type"
@@ -159,6 +159,58 @@ ActiveRecord::Schema.define(version: 2020_08_26_153402) do
     t.timestamp "created_at"
     t.timestamp "updated_at"
     t.boolean "is_section", default: false
+  end
+
+  create_table "code_review_assignments", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "issue_id"
+    t.integer "change_id"
+    t.integer "attachment_id"
+    t.string "file_path"
+    t.string "rev"
+    t.string "rev_to"
+    t.string "action_type"
+    t.integer "changeset_id"
+  end
+
+  create_table "code_review_project_settings", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "project_id"
+    t.integer "tracker_id"
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
+    t.integer "updated_by"
+    t.boolean "hide_code_review_tab", default: false
+    t.integer "auto_relation", default: 1
+    t.integer "assignment_tracker_id"
+    t.text "auto_assign"
+    t.integer "lock_version", default: 0, null: false
+    t.boolean "tracker_in_review_dialog", default: false
+  end
+
+  create_table "code_review_user_settings", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "user_id", default: 0, null: false
+    t.integer "mail_notification", default: 0, null: false
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
+  end
+
+  create_table "code_reviews", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "project_id"
+    t.integer "change_id"
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
+    t.integer "line"
+    t.integer "updated_by_id"
+    t.integer "lock_version", default: 0, null: false
+    t.integer "status_changed_from"
+    t.integer "status_changed_to"
+    t.integer "issue_id"
+    t.string "action_type"
+    t.string "file_path"
+    t.string "rev"
+    t.string "rev_to"
+    t.integer "attachment_id"
+    t.integer "file_count", default: 0, null: false
+    t.boolean "diff_all"
   end
 
   create_table "comments", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -444,6 +496,12 @@ ActiveRecord::Schema.define(version: 2020_08_26_153402) do
     t.integer "timestamp", null: false
     t.string "server_url"
     t.string "salt", null: false
+  end
+
+  create_table "polls", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "question"
+    t.integer "yes", default: 0
+    t.integer "no", default: 0
   end
 
   create_table "projects", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
