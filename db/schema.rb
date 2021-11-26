@@ -12,6 +12,35 @@
 
 ActiveRecord::Schema.define(version: 2020_08_26_153402) do
 
+  create_table "agile_colors", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "container_type"
+    t.integer "container_id"
+    t.string "color"
+    t.index ["container_id"], name: "index_agile_colors_on_container_id"
+    t.index ["container_type"], name: "index_agile_colors_on_container_type"
+  end
+
+  create_table "agile_data", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "issue_id"
+    t.integer "position"
+    t.integer "story_points"
+    t.integer "agile_sprint_id"
+    t.index ["issue_id"], name: "index_agile_data_on_issue_id"
+    t.index ["position"], name: "index_agile_data_on_position"
+  end
+
+  create_table "agile_sprints", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "project_id"
+    t.string "name", null: false
+    t.text "description"
+    t.integer "status", default: 0, null: false
+    t.date "start_date", null: false
+    t.date "end_date", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "sharing", default: 0, null: false
+  end
+
   create_table "attachments", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "container_id"
     t.string "container_type", limit: 30
@@ -437,6 +466,13 @@ ActiveRecord::Schema.define(version: 2020_08_26_153402) do
     t.index ["query_id", "role_id"], name: "queries_roles_ids", unique: true
   end
 
+  create_table "redhopper_issues", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "issue_id", null: false
+    t.boolean "blocked", default: false
+    t.integer "position"
+    t.index ["issue_id"], name: "index_redhopper_issues_on_issue_id"
+  end
+
   create_table "repositories", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "project_id", default: 0, null: false
     t.string "url", default: "", null: false
@@ -646,4 +682,5 @@ ActiveRecord::Schema.define(version: 2020_08_26_153402) do
     t.index ["tracker_id"], name: "index_workflows_on_tracker_id"
   end
 
+  add_foreign_key "redhopper_issues", "issues"
 end
