@@ -12,6 +12,32 @@
 
 ActiveRecord::Schema.define(version: 2021_11_26_024306) do
 
+  create_table "additional_taggings", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "tag_id"
+    t.string "taggable_type"
+    t.bigint "taggable_id"
+    t.string "tagger_type"
+    t.bigint "tagger_id"
+    t.string "context", limit: 128
+    t.datetime "created_at"
+    t.index ["context"], name: "index_additional_taggings_on_context"
+    t.index ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "ataggings_idx", unique: true
+    t.index ["taggable_id", "taggable_type", "context"], name: "ataggings_taggable_context_idx"
+    t.index ["taggable_id", "taggable_type", "tagger_id", "context"], name: "ataggings_idy"
+    t.index ["taggable_type", "taggable_id"], name: "index_additional_taggings_on_taggable_type_and_taggable_id"
+    t.index ["taggable_type"], name: "index_additional_taggings_on_taggable_type"
+    t.index ["tagger_id", "tagger_type"], name: "index_additional_taggings_on_tagger_id_and_tagger_type"
+    t.index ["tagger_type", "tagger_id"], name: "index_additional_taggings_on_tagger_type_and_tagger_id"
+  end
+
+  create_table "additional_tags", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name", limit: 191, collation: "utf8mb4_bin"
+    t.integer "taggings_count", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_additional_tags_on_name", unique: true
+  end
+
   create_table "agile_colors", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "container_type"
     t.integer "container_id"
@@ -280,6 +306,33 @@ ActiveRecord::Schema.define(version: 2021_11_26_024306) do
     t.index ["customized_type", "customized_id"], name: "custom_values_customized"
   end
 
+  create_table "dashboard_roles", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "dashboard_id", null: false
+    t.integer "role_id", null: false
+    t.index ["dashboard_id", "role_id"], name: "dashboard_role_ids", unique: true
+    t.index ["dashboard_id"], name: "index_dashboard_roles_on_dashboard_id"
+    t.index ["role_id"], name: "index_dashboard_roles_on_role_id"
+  end
+
+  create_table "dashboards", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.string "dashboard_type", limit: 30, default: "", null: false
+    t.boolean "system_default", default: false, null: false
+    t.boolean "always_expose", default: false, null: false
+    t.boolean "enable_sidebar", default: false, null: false
+    t.integer "project_id"
+    t.integer "author_id", null: false
+    t.integer "visibility", default: 0, null: false
+    t.text "options"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_id"], name: "index_dashboards_on_author_id"
+    t.index ["name"], name: "index_dashboards_on_name"
+    t.index ["project_id"], name: "index_dashboards_on_project_id"
+    t.index ["visibility"], name: "index_dashboards_on_visibility"
+  end
+
   create_table "documents", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "project_id", default: 0, null: false
     t.integer "category_id", default: 0, null: false
@@ -519,6 +572,8 @@ ActiveRecord::Schema.define(version: 2021_11_26_024306) do
     t.boolean "inherit_members", default: false, null: false
     t.integer "default_version_id"
     t.integer "default_assigned_to_id"
+    t.text "new_ticket_message"
+    t.integer "enable_new_ticket_message", default: 1, null: false
     t.index ["lft"], name: "index_projects_on_lft"
     t.index ["rgt"], name: "index_projects_on_rgt"
   end
@@ -585,6 +640,7 @@ ActiveRecord::Schema.define(version: 2021_11_26_024306) do
     t.string "time_entries_visibility", limit: 30, default: "all", null: false
     t.boolean "all_roles_managed", default: true, null: false
     t.text "settings"
+    t.boolean "hide", default: false, null: false
   end
 
   create_table "roles_managed_roles", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -646,6 +702,7 @@ ActiveRecord::Schema.define(version: 2021_11_26_024306) do
     t.text "others"
     t.boolean "hide_mail", default: true
     t.string "time_zone"
+    t.boolean "autowatch_involved_issue", default: true, null: false
     t.index ["user_id"], name: "index_user_preferences_on_user_id"
   end
 
@@ -767,5 +824,10 @@ ActiveRecord::Schema.define(version: 2021_11_26_024306) do
     t.index ["tracker_id"], name: "index_workflows_on_tracker_id"
   end
 
+  add_foreign_key "additional_taggings", "additional_tags", column: "tag_id"
+  add_foreign_key "dashboard_roles", "dashboards", on_delete: :cascade
+  add_foreign_key "dashboard_roles", "roles", on_delete: :cascade
+  add_foreign_key "dashboards", "projects", on_delete: :cascade
+  add_foreign_key "dashboards", "users", column: "author_id", on_delete: :cascade
   add_foreign_key "redhopper_issues", "issues"
 end
