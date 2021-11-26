@@ -134,6 +134,33 @@ ActiveRecord::Schema.define(version: 2020_08_26_153402) do
     t.index ["issue_id"], name: "index_changesets_issues_on_issue_id"
   end
 
+  create_table "checklist_template_categories", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.integer "position", default: 1
+  end
+
+  create_table "checklist_templates", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.integer "project_id"
+    t.integer "category_id"
+    t.integer "user_id"
+    t.boolean "is_public"
+    t.text "template_items"
+    t.boolean "is_default", default: false
+    t.integer "tracker_id"
+    t.index ["tracker_id"], name: "index_checklist_templates_on_tracker_id"
+  end
+
+  create_table "checklists", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.boolean "is_done", default: false
+    t.string "subject", limit: 512
+    t.integer "position", default: 1
+    t.integer "issue_id", null: false
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
+    t.boolean "is_section", default: false
+  end
+
   create_table "comments", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "commented_type", limit: 30, default: "", null: false
     t.integer "commented_id", default: 0, null: false
