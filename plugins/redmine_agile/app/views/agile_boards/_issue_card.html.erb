@@ -36,19 +36,23 @@
           <p class="name" ><%= link_to "#{'#' + issue.id.to_s + ': ' if @query.has_column_name?(:id) && @query.has_column_name?(:tracker).blank?}#{issue.subject.truncate(100)}", issue_path(issue) %></p>
           <%# Show tags %>
           <% if RedmineCrm::Tagging.where(taggable_id: issue.id).pluck(:taggable_id).first.present? %>
-            <p class="name">Tags:
+            <p class="name"> Tags:
               <% RedmineCrm::Tagging.where(taggable_id: issue.id).pluck(:tag_id).each do |tags|
-                @class= ""
+                @class = ""
+                @tag_url = ""
                 case RedmineCrm::Tag.find(tags).name
                 when "UI"
                   @class = "tagtest ui"
+                  @tag_url = "/projects/#{issue.project.name}/issues?fields%5B%5D=issue_tags&amp;operators%5Bissue_tags%5D=%3D&amp;set_filter=1&amp;values%5Bissue_tags%5D%5B%5D=UI"
                 when "Frontend"
                   @class = "tagtest frontend"
+                  @tag_url = "/projects/#{issue.project.name}/issues?fields%5B%5D=issue_tags&amp;operators%5Bissue_tags%5D=%3D&amp;set_filter=1&amp;values%5Bissue_tags%5D%5B%5D=Frontend"
                 else
                   @class = "tagtest backend"
+                  @tag_url = "/projects/#{issue.project.name}/issues?fields%5B%5D=issue_tags&amp;operators%5Bissue_tags%5D=%3D&amp;set_filter=1&amp;values%5Bissue_tags%5D%5B%5D=Backend"
                 end
               %>
-              <%= link_to RedmineCrm::Tag.find(tags).name, {}, class: @class %>
+              <%= link_to RedmineCrm::Tag.find(tags).name, @tag_url, class: @class %>
               <% end %>
             </p>
           <% end %>
