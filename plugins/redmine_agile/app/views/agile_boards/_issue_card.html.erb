@@ -34,6 +34,25 @@
             <%= render_issue_card_hours(@query, issue) %>
           </p>
           <p class="name" ><%= link_to "#{'#' + issue.id.to_s + ': ' if @query.has_column_name?(:id) && @query.has_column_name?(:tracker).blank?}#{issue.subject.truncate(100)}", issue_path(issue) %></p>
+          <%# Show tags %>
+          <% if RedmineCrm::Tagging.where(taggable_id: issue.id).pluck(:taggable_id).first.present? %>
+            <p class="name">Tags:
+              <% RedmineCrm::Tagging.where(taggable_id: issue.id).pluck(:tag_id).each do |tags|
+                @class= ""
+                case RedmineCrm::Tag.find(tags).name
+                when "UI"
+                  @class = "tagtest ui"
+                when "Frontend"
+                  @class = "tagtest frontend"
+                else
+                  @class = "tagtest backend"
+                end
+              %>
+              <%= link_to RedmineCrm::Tag.find(tags).name, {}, class: @class %>
+              <% end %>
+            </p>
+          <% end %>
+          <%# End %>
           <p class="attributes">
             <% @query.card_columns.select{|c| !c.value(issue).blank? }.each do |column| %>
               <b><%= column.caption %></b>: <%= column_content(column, issue) %> <br>
