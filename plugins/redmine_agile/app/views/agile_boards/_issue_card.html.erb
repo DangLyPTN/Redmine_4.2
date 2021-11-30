@@ -33,28 +33,48 @@
             <% end %>
             <%= render_issue_card_hours(@query, issue) %>
           </p>
-          <p class="name" ><%= link_to "#{'#' + issue.id.to_s + ': ' if @query.has_column_name?(:id) && @query.has_column_name?(:tracker).blank?}#{issue.subject.truncate(100)}", issue_path(issue) %></p>
-          <%# Show tags %>
-          <% if RedmineCrm::Tagging.where(taggable_id: issue.id).pluck(:taggable_id).first.present? %>
-            <p class="name"> Tags:
+          <p class="name" ><%= link_to "#{'#' + issue.id.to_s + ': ' if @query.has_column_name?(:id) && @query.has_column_name?(:tracker).blank?}#{issue.subject.truncate(100)}", issue_path(issue), class: "link"%></p>
+          <%# Show tags/ All fields %>
+          <p class="inline"><%= l(:field_priority) %>: </p><%= issue.priority.name %>
+          <p class="inline"><br><%= l(:field_author) %>: </p><%= link_to issue.author, issue.author %>
+          <p class="inline"><br><%= l(:field_start_date) %>: </p><%= issue.start_date %>
+          <p class="inline"><br><%= l(:label_created_on) %>: </p><%= issue.created_on %>
+          <p class="inline"><br><%= l(:label_updated_on) %>: </p><%= issue.updated_on %>
+          <% spent_time = TimeEntry.where(issue_id: issue.id).pluck(:hours)
+          estimated_time = "/#{issue.estimated_hours}h"
+          description = issue.description
+          css_class = ""
+          tag = ""
+          if spent_time.first.present? %>
+            <p class="inline"><br><%= l(:label_spent_time) %>: </p><%= spent_time.sum() %>h<%= estimated_time if issue.estimated_hours.present? %> (<%= l(:field_done_ratio) %>: <%= issue.done_ratio %>%)
+          <% end
+          if RedmineCrm::Tagging.where(taggable_id: issue.id).pluck(:taggable_id).first.present? %>
+            <p class="name tagtest"><%= l(:label_tags) %>:
               <% RedmineCrm::Tagging.where(taggable_id: issue.id).pluck(:tag_id).each do |tags|
-                @class = ""
-                @tag_url = ""
                 case RedmineCrm::Tag.find(tags).name
                 when "UI"
-                  @class = "tagtest ui"
-                  @tag_url = "/projects/#{issue.project.name}/issues?fields%5B%5D=issue_tags&amp;operators%5Bissue_tags%5D=%3D&amp;set_filter=1&amp;values%5Bissue_tags%5D%5B%5D=UI"
+                  css_class = "tagtest ui"
+                  tag = "UI"
                 when "Frontend"
-                  @class = "tagtest frontend"
-                  @tag_url = "/projects/#{issue.project.name}/issues?fields%5B%5D=issue_tags&amp;operators%5Bissue_tags%5D=%3D&amp;set_filter=1&amp;values%5Bissue_tags%5D%5B%5D=Frontend"
+                  css_class = "tagtest frontend"
+                  tag = "Frontend"
+                when "Agile"
+                  css_class = "tagtest agile"
+                  tag = "Agile"
                 else
-                  @class = "tagtest backend"
-                  @tag_url = "/projects/#{issue.project.name}/issues?fields%5B%5D=issue_tags&amp;operators%5Bissue_tags%5D=%3D&amp;set_filter=1&amp;values%5Bissue_tags%5D%5B%5D=Backend"
+                  css_class = "tagtest backend"
+                  tag = "Backend"
                 end
+                tag_url = "/projects/#{issue.project.name}/issues?fields%5B%5D=issue_tags&amp;operators%5Bissue_tags%5D=%3D&amp;set_filter=1&amp;values%5Bissue_tags%5D%5B%5D=#{tag}"
               %>
-              <%= link_to RedmineCrm::Tag.find(tags).name, @tag_url, class: @class %>
+              <%= link_to RedmineCrm::Tag.find(tags).name, tag_url, class: css_class %>
               <% end %>
             </p>
+          <% end %>
+          <p class="inline"><%= l(:label_in_status) %>: </p><%= time_tag(issue.created_on) %>
+          <% if description.present? %>
+            <hr>
+            <%= issue.description %>
           <% end %>
           <%# End %>
           <p class="attributes">

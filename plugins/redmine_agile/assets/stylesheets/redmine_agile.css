@@ -207,6 +207,18 @@ table.issues-board.minimize-closed td.issue-status-col.closed .issue-card span.f
 .issue-card .checkbox {display: none;}
 .issue-card .avatar {float: left; margin-right: 5px;}
 .issue-card p.name {font-weight: bold;}
+.issue-card p.tagtest {margin: 3px 0 3px 0;}
+.issue-card a {color: #666;}
+
+.issue-card a.link {
+  color: rgb(0, 102, 255);
+  font-size: 13px;
+}
+
+.issue-card p.inline {
+  font-weight: bold;
+  display: inline;
+}
 
 .issue-card a.tagtest {
   display: inline;
@@ -226,6 +238,10 @@ table.issues-board.minimize-closed td.issue-status-col.closed .issue-card span.f
 
 .issue-card a.tagtest.backend {
   background: rgb(230, 0, 172);
+}
+
+.issue-card a.tagtest.agile {
+  background: rgb(0, 153, 51);
 }
 
 .issue-card a.tagtest:hover {
