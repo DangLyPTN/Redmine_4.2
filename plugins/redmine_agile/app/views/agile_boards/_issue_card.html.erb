@@ -33,7 +33,7 @@
             <% end %>
             <%= render_issue_card_hours(@query, issue) %>
           </p>
-          <p class="name" ><%= link_to "#{'#' + issue.id.to_s + ': ' if @query.has_column_name?(:id) && @query.has_column_name?(:tracker).blank?}#{issue.subject.truncate(100)}", issue_path(issue), class: "link"%></p>
+          <p class="name" ><%= link_to "#{'#' + issue.id.to_s + ': ' if @query.has_column_name?(:id) && @query.has_column_name?(:tracker).blank?}#{issue.subject.truncate(100)}", issue_path(issue), class: "link" %></p>
           <%# Show tags/ All fields %>
           <p class="inline"><%= l(:field_priority) %>: </p><%= issue.priority.name %>
           <p class="inline"><br><%= l(:field_author) %>: </p><%= link_to issue.author, issue.author %>
@@ -46,7 +46,7 @@
           css_class = ""
           tag = ""
           if spent_time.first.present? %>
-            <p class="inline"><br><%= l(:label_spent_time) %>: </p><%= spent_time.sum() %>h<%= estimated_time if issue.estimated_hours.present? %> (<%= l(:field_done_ratio) %>: <%= issue.done_ratio %>%)
+            <p class="inline"><br><%= l(:label_spent_time) %>: </p><%= spent_time.sum() %>h<%= estimated_time if issue.estimated_hours.present? %> (<%= l(:label_done) %>: <%= issue.done_ratio %>%)
           <% end
           if RedmineCrm::Tagging.where(taggable_id: issue.id).pluck(:taggable_id).first.present? %>
             <p class="name tagtest"><%= l(:label_tags) %>:
