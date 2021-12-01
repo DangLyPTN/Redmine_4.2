@@ -26,6 +26,7 @@
               <%= issue.project.name %>
             </p>
           <% end %>
+          <p class="project"><%= issue.project.name %></p>
           <p class="issue-id <%= 'without-tracker' if @query.has_column_name?(:tracker).blank? %>">
             <%= check_box_tag("ids[]", issue.id, false, :id => nil, :class => 'checkbox') %>
             <% if @query.has_column_name?(:tracker) %>
@@ -34,7 +35,6 @@
             <%= render_issue_card_hours(@query, issue) %>
           </p>
           <p class="name" ><%= link_to "#{'#' + issue.id.to_s + ': ' if @query.has_column_name?(:id) && @query.has_column_name?(:tracker).blank?}#{issue.subject.truncate(100)}", issue_path(issue), class: "link" %></p>
-          <%# Show tags/ All fields %>
           <p class="inline"><%= l(:field_priority) %>: </p><%= issue.priority.name %>
           <p class="inline"><br><%= l(:field_author) %>: </p><%= link_to issue.author, issue.author %>
           <p class="inline"><br><%= l(:field_start_date) %>: </p><%= issue.start_date %>
@@ -49,9 +49,8 @@
           <p class="name tagtest"><%= l(:tags) %>:
             <% issue.tag_counts.collect do |tags|
               show_tags(tags.name)
-              tag_url = "/projects/#{issue.project.name}/issues?fields%5B%5D=issue_tags&amp;operators%5Bissue_tags%5D=%3D&amp;set_filter=1&amp;values%5Bissue_tags%5D%5B%5D=#{@tag}"
             %>
-              <%= link_to tags.name, tag_url, class: @css_class %>
+              <%= render_issue_tag_link(tags, @css_class) %>
             <% end %>
           </p>
           <p class="inline"><%= l(:label_in_status) %>: </p><%= time_tag(issue.created_on) %>
@@ -59,7 +58,6 @@
             <hr>
             <%= description %>
           <% end %>
-          <%# End %>
           <p class="attributes">
             <% @query.card_columns.select{|c| !c.value(issue).blank? }.each do |column| %>
               <b><%= column.caption %></b>: <%= column_content(column, issue) %> <br>

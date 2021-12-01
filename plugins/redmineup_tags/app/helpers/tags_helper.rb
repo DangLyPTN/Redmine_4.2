@@ -24,14 +24,14 @@ require 'digest/md5'
 module TagsHelper
   include RedmineCrm::TagsHelper
 
-  def render_issue_tag_link(tag, options = {})
+  def render_issue_tag_link(tag, css_class, options = {})
     filters = [[:issue_tags, '=', tag.name]]
     filters << [:status_id, 'o'] if options[:open_only]
     content =
       if options[:use_search]
         link_to(tag, controller: 'search', action: 'index', id: @project, q: tag.name, wiki_pages: true, issues: true)
       else
-        link_to_issue_filter tag.name, filters, project_id: @project
+        link_to_issue_filter tag.name, filters, css_class, project_id: @project
       end
     content << content_tag('span', "(#{tag.count})", class: 'tag-count') if options[:show_count]
 
@@ -85,9 +85,9 @@ module TagsHelper
     end
   end
 
-  def link_to_issue_filter(title, filters, options = {})
+  def link_to_issue_filter(title, filters, css_class, options = {})
     options.merge! link_to_issue_filter_options(filters)
-    link_to title, options
+    link_to title, options, class: css_class
   end
 
   # returns hash suitable for passing it to the <tt>to_link</tt>
