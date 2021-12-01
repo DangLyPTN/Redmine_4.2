@@ -34,7 +34,7 @@ module AgileBoardsHelper
       th_attributes[:"data-column-id"] = leaf.id
       issue_count = leaf.instance_variable_get("@issue_count") || 0
       count_tag = " (#{content_tag(:span, issue_count.to_i, :class => 'count')})".html_safe
-      
+
 
       # estimated hours total
       story_points_count = leaf.instance_variable_get("@story_points") || 0
@@ -155,5 +155,23 @@ module AgileBoardsHelper
     RedmineAgile.use_checklist? && issue.checklists.any? && User.current.allowed_to?(:view_checklists, issue.project)
   rescue
     false
+  end
+
+  def show_tags(tags_name)
+    case tags_name
+    when "UI"
+      @css_class = "tagtest ui"
+      @tag = "UI"
+    when "Frontend"
+      @css_class = "tagtest frontend"
+      @tag = "Frontend"
+    when "Agile"
+      @css_class = "tagtest agile"
+      @tag = "Agile"
+    else
+      @css_class = "tagtest backend"
+      @tag = "Backend"
+    end
+    return @css_class, @tag
   end
 end
