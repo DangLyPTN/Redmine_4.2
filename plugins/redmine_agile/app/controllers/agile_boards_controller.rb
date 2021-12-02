@@ -61,6 +61,7 @@ class AgileBoardsController < ApplicationController
       @issue_board = @query.issue_board
       @board_columns = @query.board_statuses
       @allowed_statuses = statuses_allowed_for_create
+      @display = params[:display]
 
       respond_to do |format|
         format.html { render :template => 'agile_boards/index', :layout => !request.xhr? }

@@ -239,3 +239,5 @@ en:
   label_updated_on: Updated on
   label_in_status: In status
   label_done: Done
+  label_all_fields: All fields
+  label_default: Default

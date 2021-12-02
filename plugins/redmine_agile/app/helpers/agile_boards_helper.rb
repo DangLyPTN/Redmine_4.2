@@ -174,4 +174,8 @@ module AgileBoardsHelper
     end
     return @css_class, @tag
   end
+
+  def show_all_fields(display)
+    display == "all_fields" ? true : false
+  end
 end
