@@ -157,7 +157,7 @@ module AgileBoardsHelper
     false
   end
 
-  def show_tags(tags_name)
+  def find_tags(tags_name)
     case tags_name
     when "UI"
       @css_class = "tagtest ui"
