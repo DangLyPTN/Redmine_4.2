@@ -106,7 +106,7 @@ class AgileBoardsController < ApplicationController
       @inline_adding = params[:issue][:notes] || nil
 
       respond_to do |format|
-        format.html { render(:partial => 'issue_card', :locals => {:issue => @issue}, :status => :ok, :layout => nil) }
+        format.html { render(:partial => 'issue_card', :locals => {:issue => @issue, display: params[:display]}, :status => :ok, :layout => nil) }
       end
     else
       respond_to do |format|

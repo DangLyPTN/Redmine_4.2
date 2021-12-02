@@ -206,7 +206,8 @@
                 status_id: newStatusId
               },
               positions: positions,
-              id: issue_id
+              id: issue_id,
+              display: new window.URLSearchParams(window.location.search).get('display')
             }
           params['issue'][swimLaneField] = swimLaneId;
 

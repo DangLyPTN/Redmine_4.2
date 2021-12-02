@@ -26,9 +26,8 @@
               <%= issue.project.name %>
             </p>
           <% end %>
-          <% if show_all_fields(@display) %>
-            <p class="project"><%= issue.project.name %></p>
-          <% end %>
+          <%= render partial: "issue_card_project_name", locals: {issue: issue, display: @display} %>
+          <%= render partial: "issue_card_project_name", locals: {issue: issue, display: display} %>
           <p class="issue-id <%= 'without-tracker' if @query.has_column_name?(:tracker).blank? %>">
             <%= check_box_tag("ids[]", issue.id, false, :id => nil, :class => 'checkbox') %>
             <% if @query.has_column_name?(:tracker) %>
@@ -37,30 +36,8 @@
             <%= render_issue_card_hours(@query, issue) %>
           </p>
           <p class="name" ><%= link_to "#{'#' + issue.id.to_s + ': ' if @query.has_column_name?(:id) && @query.has_column_name?(:tracker).blank?}#{issue.subject.truncate(100)}", issue_path(issue), class: "link" %></p>
-          <% if show_all_fields(@display) %>
-            <p class="inline"><%= l(:field_priority) %>: </p><%= issue.priority.name %>
-            <p class="inline"><br><%= l(:field_author) %>: </p><%= link_to issue.author, issue.author %>
-            <p class="inline"><br><%= l(:field_start_date) %>: </p><%= issue.start_date %>
-            <p class="inline"><br><%= l(:label_created_on) %>: </p><%= issue.created_on %>
-            <p class="inline"><br><%= l(:label_updated_on) %>: </p><%= issue.updated_on %>
-            <% spent_time = issue_spent_hours_details(issue)
-            estimated_time = "/#{issue.estimated_hours}h"
-            description = issue.description
-            if spent_time.present? %>
-              <p class="inline"><br><%= l(:label_spent_time) %>: </p><%= spent_time %><%= estimated_time if issue.estimated_hours.present? %> (<%= l(:label_done) %>: <%= issue.done_ratio %>%)
-            <% end %>
-            <p class="name tagtest"><%= l(:tags) %>:
-              <% issue.tag_counts.collect do |tags|
-                find_tags(tags.name) %>
-                <%= render_issue_tag_link(tags, @css_class) %>
-              <% end %>
-            </p>
-            <p class="inline"><%= l(:label_in_status) %>: </p><%= time_tag(issue.created_on) %>
-            <% if description.present? %>
-              <hr>
-              <%= description %>
-            <% end %>
-          <% end %>
+          <%= render partial: "issue_card_all_fields", locals: {issue: issue, display: @display} %>
+          <%= render partial: "issue_card_all_fields", locals: {issue: issue, display: display} %>
           <p class="attributes">
             <% @query.card_columns.select{|c| !c.value(issue).blank? }.each do |column| %>
               <b><%= column.caption %></b>: <%= column_content(column, issue) %> <br>
