@@ -1,4 +1,4 @@
-<div class="issue-card hascontextmenu <%= agile_color_class(issue, :color_base => @query.respond_to?(:color_base) && @query.color_base) %> <%= class_for_closed_issue(issue, @version_board) %>"
+<div class="issue-card <%= issue.priority.name.downcase %> hascontextmenu <%= agile_color_class(issue, :color_base => @query.respond_to?(:color_base) && @query.color_base) %> <%= class_for_closed_issue(issue, @version_board) %>"
      data-id="<%= issue.id %>"
      data-estimated-hours="<%= estimated_time_value(@query, issue).to_f %>"
      data-story-points="<%= story_points_value(@query, issue).to_f %>"
@@ -37,6 +37,14 @@
           </p>
           <p class="name" ><%= link_to "#{'#' + issue.id.to_s + ': ' if @query.has_column_name?(:id) && @query.has_column_name?(:tracker).blank?}#{issue.subject.truncate(100)}", issue_path(issue), class: "link" %></p>
           <%= render partial: "issue_card_all_fields", locals: {issue: issue, display: @display} %>
+          <% if !show_all_fields(display) && !show_all_fields(@display) %>
+            <p class="name tagtest"><%= l(:tags) %>:
+              <% issue.tag_counts.collect do |tags|
+                find_tags(tags.name) %>
+                <%= render_issue_tag_link(tags, @css_class) %>
+              <% end %>
+            </p>
+          <%end%>
           <%= render partial: "issue_card_all_fields", locals: {issue: issue, display: display} %>
           <p class="attributes">
             <% @query.card_columns.select{|c| !c.value(issue).blank? }.each do |column| %>

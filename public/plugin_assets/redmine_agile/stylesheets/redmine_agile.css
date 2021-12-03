@@ -183,6 +183,10 @@ table.issues-board.minimize-closed td.issue-status-col.closed .issue-card span.f
   position: relative;
 }
 
+.low {background-color: #ccccff;}
+.high {background-color: #ffff66;}
+.urgent {background-color: #ffc266;}
+.immediate {background-color: #ff80b3;}
 .issues-board td.issue-status-col.closed .issue-card.closed-issue {float: left;}
 .issues-board td.issue-status-col.closed.collapse .issue-card.float-left {float: left; position: relative;}
 .issue-card.closed-issue {white-space: nowrap; display: inline-block;}
