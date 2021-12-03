@@ -19,10 +19,6 @@
 <h3><%= l(:label_agile_board_plural) %></h3>
 
 <ul>
-  <% if User.current.allowed_to?(:view_agile_queries, @project) %>
-    <li><%= link_to l(:label_all_fields), {:controller => "agile_boards", :action => "index", :project_id => @project, display: "all_fields"} %></li>
-  <% end %>
-  <% if User.current.allowed_to?(:view_agile_queries, @project) %>
-    <li><%= link_to l(:label_default), {:controller => "agile_boards", :action => "index", :project_id => @project} %></li>
-  <% end %>
+  <li><%= link_to l(:label_all_fields), {:controller => "agile_boards", :action => "index", :project_id => @project, display: "all_fields"} %></li>
+  <li><%= link_to l(:label_default), {:controller => "agile_boards", :action => "index", :project_id => @project} %></li>
 </ul>
