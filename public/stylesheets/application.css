@@ -120,15 +120,80 @@ html>body #content { min-height: 600px; }
 
 #footer {clear: both; border-top: 1px solid #bbb; font-size: 0.9em; color: #aaa; padding: 5px; text-align:center; background:#fff;}
 
-#login-form {margin:5em auto 2em auto; padding:20px; width:340px; border:1px solid #FDBF3B; background-color:#FFEBC1; border-radius:4px; box-sizing: border-box;}
-#login-form label {display:block; margin-bottom:5px; font-weight:bold;}
+#login-form {
+  margin: 3em auto 0 auto;
+  padding: 30px;
+  width: 450px;
+  border: 1px solid #56baed;
+  border-radius: 4px;
+  box-sizing: border-box;
+  box-shadow: 5px 10px 18px #888888;
+}
+#login-form label {
+  display:block;
+  margin-bottom:5px;
+  font-weight:bold;
+}
 #login-form label[for=autologin] {font-weight:normal;}
-#login-form input {height: 29px;}
-#login-form input[type=text], #login-form input[type=password], #login-form input[type=submit] {display: block; width: 100%;}
+#login-form input {
+  height: auto;
+  text-align: center;
+  padding: 25px;
+  border-radius: 10px 10px 10px 10px;
+  background-color: #f6f6f6;
+  margin-top: 20px;
+}
+#login-form img {
+  max-width: 100%;
+  height: auto;
+}
+#login-form input[type=text], #login-form input[type=password] {
+  display: block;
+  width: 100%;
+}
 #login-form input[type=text], #login-form input[type=password] {margin-bottom: 15px;}
-#login-form a.lost_password {float:right; font-weight:normal;}
-#login-form input#openid_url {background:#fff url(../images/openid-bg.gif) no-repeat 4px 50%; padding-left:24px !important;}
+#login-form #formFooter {
+  padding-top: 50px;
+  text-align: center;
+  font-size: 15px;
+  text-transform: capitalize;
+}
+#login-form .lost_password:after {
+  display: block;
+  margin-top: 3px;
+  width: 0;
+  height: 2px;
+  background-color: #ff0000;
+  content: "";
+  transition: width 0.5s;
+}
+#login-form .lost_password:hover {
+  color: #ff0000;
+}
+#login-form .lost_password:hover:after{
+  width: 100%;
+}
+#login-form input#openid_url {
+  background:#fff url(../images/openid-bg.gif) no-repeat 4px 50%;
+  padding-left: 24px !important;
+}
 #login-form h3 {text-align: center;}
+#login-form input[type=submit] {
+  background-color: #56baed;
+  width: 65%;
+  color: white;
+  text-transform: uppercase;
+  font-size: 15px;
+  font-weight: bold;
+  display: block;
+  border: 1px solid #56baed;
+  margin: auto;
+  padding: 20px;
+}
+#login-form input[type=submit]:hover {
+  background-color: #39ace7;
+}
+
 
 div.modal { border-radius:5px; background:#fff; z-index:50; padding:4px;}
 div.modal h3.title {display:none;}
