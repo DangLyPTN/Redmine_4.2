@@ -1,0 +1,6 @@
+<p class="name tagtest"><%= l(:tags) %>:
+  <% issue.tag_counts.collect do |tags|
+    find_tags(tags.name) %>
+    <%= render_issue_tag_link(tags, @css_class) %>
+  <% end %>
+</p>
